@@ -62,13 +62,13 @@ public class MindControl {
     waves_current[pos]=val;
     waves_count[pos]++;
     waves_average[pos] += val;
-    waves_average[pos] /= waves_count[pos];
+    waves_average[pos] /= 2;
     waves_variance[pos] += (val-waves_average[pos])*(val-waves_average[pos]);
+    waves_variance[pos] /= 2;
     //set the maximum 
     if(val > waves_max[pos]) waves_max[pos] = val;
     //now calculate the percentage of current
     waves_current_percentage[pos]=(val/(double)(waves_max[pos]/100));
-    System.out.println(pos+" "+waves_current_percentage[pos]);
     if(pos == 10)drawData();
   }
   private void drawData(){
