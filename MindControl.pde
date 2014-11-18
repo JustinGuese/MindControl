@@ -1,8 +1,4 @@
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.util.ArrayList;
-
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -56,12 +52,9 @@ public class MindControl {
   }
   
 
-  public void update(String str){
-    String [] a= str.split(",");
-    for(int i = 0; i < a.length;i++){
-      waves_current[i]=Integer.parseInt(a[i]);
-    }
-    drawData();
+  public void update(int pos, int val){
+    waves_current[pos]=val;
+    if(pos == 10)drawData();
   }
   private void drawData(){
     texts[0].setText("Signal Strength: "+waves_current[0]);
