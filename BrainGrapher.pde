@@ -125,7 +125,7 @@ void serialEvent(Serial p) {
   print("Received string over serial: ");
   println(incomingString); 
   brainw.write(incomingString+System.getProperty("line.separator"));
-  mindc.update(incomingString);
+ // mindc.update(incomingString);
   
   String[] incomingValues = split(incomingString, ',');
 
