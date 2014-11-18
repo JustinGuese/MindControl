@@ -14,6 +14,8 @@ public class MindControl {
   
   private int [] waves_average;
   private int [] waves_current;
+  private int [] waves_variance;
+  private int [] waves_count;
   
 
   public MindControl(){
@@ -26,7 +28,7 @@ public class MindControl {
     panel = new JPanel();
     top = new JPanel();
     bottom = new JPanel();
-    texts = new JLabel[11];
+    texts = new JLabel[12];
     for (int i = 0; i < texts.length; i++)
       texts[i]= new JLabel();
     frame.add(panel);
@@ -42,11 +44,8 @@ public class MindControl {
     // set all brain waves by default to zero
     waves_average = new int [11];
     waves_current = new int [11];
-    for(int i : waves_average)
-      i = 0;
-    for(int i : waves_current)
-      i = 0;
-    
+    waves_variance = new int [11];
+    waves_count = new int [11];
     //first draw of text
     drawData();
   }
@@ -54,21 +53,25 @@ public class MindControl {
 
   public void update(int pos, int val){
     waves_current[pos]=val;
+    waves_count[pos]++;
+    waves_average[pos] += val;
+    waves_average[pos] /= waves_count[pos];
+    waves_variance[pos] += (val-waves_average[pos])*(val-waves_average[pos]);
     if(pos == 10)drawData();
   }
   private void drawData(){
-    texts[0].setText("Signal Strength: "+waves_current[0]);
-    texts[1].setText("Attention:       "+waves_current[1]);
-    texts[2].setText("Meditation:      "+waves_current[2]);
-    texts[3].setText("Delta:          "+waves_current[3]);
-    texts[4].setText("Theta:           "+waves_current[4]);
-    texts[5].setText("Low Alpha:       "+waves_current[5]);
-    texts[6].setText("High Alpha:      "+waves_current[6]);
-    texts[7].setText("Low Beta:        "+waves_current[7]);
-    texts[8].setText("High Beta:       "+waves_current[8]);
-    texts[9].setText("Low Gamma:       "+waves_current[9]);
-    texts[10].setText("High Gamma:      "+waves_current[10]);
-
+    texts[0].setText("Signal Strength: "+waves_current[0]+" Average: "+waves_average[0]+" Variance: "+waves_variance[0]);
+    texts[1].setText("Attention:       "+waves_current[1]+" Average: "+waves_average[1]+" Variance: "+waves_variance[1]);
+    texts[2].setText("Meditation:      "+waves_current[2]+" Average: "+waves_average[2]+" Variance: "+waves_variance[2]);
+    texts[3].setText("Delta:          "+waves_current[3]+" Average: "+waves_average[3]+" Variance: "+waves_variance[3]);
+    texts[4].setText("Theta:           "+waves_current[4]+" Average: "+waves_average[4]+" Variance: "+waves_variance[4]);
+    texts[5].setText("Low Alpha:       "+waves_current[5]+" Average: "+waves_average[5]+" Variance: "+waves_variance[5]);
+    texts[6].setText("High Alpha:      "+waves_current[6]+" Average: "+waves_average[6]+" Variance: "+waves_variance[6]);
+    texts[7].setText("Low Beta:        "+waves_current[7]+" Average: "+waves_average[7]+" Variance: "+waves_variance[7]);
+    texts[8].setText("High Beta:       "+waves_current[8]+" Average: "+waves_average[8]+" Variance: "+waves_variance[8]);
+    texts[9].setText("Low Gamma:       "+waves_current[9]+" Average: "+waves_average[9]+" Variance: "+waves_variance[9]);
+    texts[10].setText("High Gamma:      "+waves_current[10]+" Average: "+waves_average[10]+" Variance: "+waves_variance[10]);
+    texts[11].setText("Count: "+waves_count[0]);
   }
 }
 
