@@ -129,16 +129,38 @@ private double BORDER = 50;
       if(waves_current[wave] > (waves_average[wave]+((double)(BORDER/100) * waves_average[wave]))){
         // if it is over BORDER
         buttons[wave].setBackground(Color.green);
+        if(wave == 1){ // if it is channel attention (working)
+          attention(true); // good quality attention
+        }
+        else if(wave == 7 || wave == 8){ // else if one of the betas
+          attention(false); // bad quality attention
+        }
+        else if(wave == 5 || wave == 6){// else if one of the alphas
+          relaxed(false); // bad quality relaxed
+        }
       }
       else if(waves_current[wave] < (waves_average[wave]-((double)(BORDER/100) * waves_average[wave]))){
         // if it is below BORDER
         buttons[wave].setBackground(Color.red);
+        if(wave == 1){ // if attention below BORDER
+          relaxed(true); // send good quality relaxed
+        }
       }
       else{
         // if it is in Border
         buttons[wave].setBackground(Color.WHITE);
       }
     }
+  }
+  private void attention(boolean SignalQuality){
+    buttons[12].setBackground(Color.white);
+    if(SignalQuality)buttons[13].setBackground(Color.green);
+    else buttons[13].setBackground(Color.yellow);
+  }
+  private void relaxed(boolean SignalQuality){
+    buttons[13].setBackground(Color.white);
+    if(SignalQuality)buttons[12].setBackground(Color.green);
+    else buttons[12].setBackground(Color.yellow);
   }
 }
 
