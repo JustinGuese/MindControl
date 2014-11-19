@@ -13,7 +13,9 @@ import javax.swing.event.ChangeListener;
 
 
 public class MindControl {
-  private double BORDER = 20;  
+  private static final int VALUEMULTIPLIER = 2;
+
+private double BORDER = 50;  
   
   private JFrame frame;
   private JPanel top;
@@ -26,7 +28,7 @@ public class MindControl {
   private long [] waves_average;
   private long [] waves_current;
   private double [] waves_variance;
-  private long [] waves_count;
+  private int [] waves_count;
   private long [] waves_max;
   private double [] waves_current_percentage;
   
@@ -34,6 +36,7 @@ public class MindControl {
   public MindControl(){
     init();
   }
+
   private void init(){
     frame = new JFrame();
     frame.setTitle("MindControl by Justin Guese");
@@ -83,7 +86,7 @@ public class MindControl {
     waves_average = new long [11];
     waves_current = new long [11];
     waves_variance = new double [11];
-    waves_count = new long [11];
+    waves_count = new int [11];
     waves_max = new long [11];
     waves_current_percentage = new double [11];
     //first draw of text
@@ -93,11 +96,9 @@ public class MindControl {
   public void update(int pos, int val){
     waves_current[pos]=val;
     waves_count[pos]++;
-    waves_average[pos] += val;
-    waves_average[pos] /= 2;
-    waves_variance[pos] += (val-waves_average[pos])*(val-waves_average[pos]);
-    waves_variance[pos] /= 2;
-    waves_variance[pos] =  Math.sqrt(waves_variance[pos]);
+    waves_average[pos] =((waves_count[pos]-1)*waves_average[pos] + val) / waves_count[pos];
+    double current_variance = Math.sqrt(((val-waves_average[pos])*(val-waves_average[pos])));
+    waves_variance[pos] = ((waves_count[pos]-1)*waves_variance[pos] + current_variance) / waves_count[pos];
     //set the maximum 
     if(val > waves_max[pos]) waves_max[pos] = val;
     //now calculate the percentage of current
@@ -122,7 +123,7 @@ public class MindControl {
     texts[11].setText("Count: "+waves_count[0]);
   }
   private void activateButtons(){
-    BORDER = slider.getValue();
+    BORDER = slider.getValue()*VALUEMULTIPLIER;
     System.out.println("Border: "+(double)(BORDER/100));
     for(int wave = 0; wave < waves_current.length; wave++){
       if(waves_current[wave] > (waves_average[wave]+((double)(BORDER/100) * waves_average[wave]))){
