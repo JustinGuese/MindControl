@@ -1,6 +1,9 @@
+import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -12,8 +15,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 
+
 public class MindControl {
   private static final int VALUEMULTIPLIER = 2;
+  private static final boolean ROBOTACTIVE = true;
+private static final long KEYPRESSTIME = 1000;
 
 private double BORDER = 50;  
   
@@ -31,6 +37,7 @@ private double BORDER = 50;
   private int [] waves_count;
   private long [] waves_max;
   private double [] waves_current_percentage;
+  private Robot robot;
   
 
   public MindControl(){
@@ -38,6 +45,12 @@ private double BORDER = 50;
   }
 
   private void init(){
+    try {
+    robot = new Robot();
+  } catch (AWTException e) {
+    System.err.println("Could not construct robot");
+    e.printStackTrace();
+  }
     frame = new JFrame();
     frame.setTitle("MindControl by Justin Guese");
     frame.setSize(800, 600);
@@ -130,7 +143,9 @@ private double BORDER = 50;
         // if it is over BORDER
         buttons[wave].setBackground(Color.green);
         if(wave == 1){ // if it is channel attention (working)
-          attention(true); // good quality attention
+          if(waves_current_percentage[wave] > 50.0){
+            attention(true); // good quality attention
+          }
         }
         else if(wave == 7 || wave == 8){ // else if one of the betas
           attention(false); // bad quality attention
@@ -156,11 +171,22 @@ private double BORDER = 50;
     buttons[12].setBackground(Color.white);
     if(SignalQuality)buttons[13].setBackground(Color.green);
     else buttons[13].setBackground(Color.yellow);
+    
+    if(ROBOTACTIVE){ // if keyboard events shall occur
+      robot.keyPress(KeyEvent.VK_W); 
+      try {
+          Thread.sleep(KEYPRESSTIME);                 //1000 milliseconds is one second.
+      } catch(InterruptedException ex) {
+          System.err.println("Got interrupted whilst waiting");
+      }
+      robot.keyRelease(KeyEvent.VK_W);
+    }
   }
   private void relaxed(boolean SignalQuality){
     buttons[13].setBackground(Color.white);
     if(SignalQuality)buttons[12].setBackground(Color.green);
     else buttons[12].setBackground(Color.yellow);
+    
   }
 }
 
